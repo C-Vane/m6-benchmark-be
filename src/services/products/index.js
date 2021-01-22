@@ -3,18 +3,6 @@ const Product = require("../../db").Product;
 const Category = require("../../db").Category;
 const { Op } = require("sequelize");
 
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const multer = require("multer");
-const cloudinary = require("../../utilts/cloudinary.js");
-
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: "amazon",
-  },
-});
-const cloudinaryMulter = multer({ storage: storage });
-
 const router = express.Router();
 
 router
@@ -47,9 +35,9 @@ router
       next(e);
     }
   })
-  .post(cloudinaryMulter.single("image"), async (req, res, next) => {
+  .post(async (req, res, next) => {
     try {
-      const newElement = await Product.create({ ...req.body, img: req.file ? req.file.path : req.body.img });
+      const newElement = await Product.create(req.body);
       res.send(newElement);
     } catch (e) {
       console.log(e);
