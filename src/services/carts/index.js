@@ -9,15 +9,12 @@ const router = express.Router();
 router.route("/:userId").get(async (req, res, next) => {
   try {
     const cart = await Cart.findAll({
-      include: [
-        { model: Product, include: [Category] },
-        { model: User, attributes: { exclude: ["password", "email"] } },
-      ],
+      include: [{ model: Product, include: [Category] }],
       attributes: [
         [Sequelize.fn("count", Sequelize.col("productId")), "unitary_qty"],
         [Sequelize.fn("sum", Sequelize.col("product.price")), "total"],
       ],
-      group: ["product.id", "product->category.id", "user.id"],
+      group: ["product.id", "product->category.id"],
       where: { userId: req.params.userId },
     });
 
@@ -25,7 +22,7 @@ router.route("/:userId").get(async (req, res, next) => {
     const total = await Cart.sum("product.price", {
       include: { model: Product, attributes: [] },
     });
-    res.send({ products: cart, qty, total });
+    res.send({ products: [...cart], qty, total });
   } catch (e) {
     console.log(e);
     next(e);

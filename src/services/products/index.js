@@ -15,7 +15,7 @@ router
             model: Category,
             where: req.query.category
               ? {
-                  name: { [Op.iLike]: "%" + req.query.category + "%" },
+                  name: { [Op.iLike]: req.query.category },
                 }
               : {},
           },

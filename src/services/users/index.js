@@ -8,7 +8,8 @@ router
   .get(async (req, res, next) => {
     try {
       const data = await User.findAll({
-        attributes: { exclude: ["email", "password", "createdAt"] },
+        /*  attributes: { exclude: ["email", "password", "createdAt"] },
+        where: */
         offset: parseInt(req.query.offset) | 0,
         limit: parseInt(req.query.limit) | 10,
       });
